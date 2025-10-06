@@ -172,7 +172,7 @@ MonoBehaviour:
   JumpPower: 19
   GroundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   GroundCheck: {fileID: 6212445581876316276}
   CoyoteTime: 0.15
   JumpBufferTime: 0.2
