@@ -16,6 +16,6 @@ public class PlatformCrusingScript : MonoBehaviour
         hasFallen = true;
 
         rb.bodyType = RigidbodyType2D.Dynamic; // enable gravity
-        rb.gravityScale = 3f;                  // adjust as needed
+        rb.gravityScale = 10f;                  // adjust as needed
     }
 }
