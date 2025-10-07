@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerDeath : MonoBehaviour
 {
@@ -15,8 +15,17 @@ public class PlayerDeath : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.layer);
         if (((1 << collision.gameObject.layer) & deadlyLayer) != 0)
         {
+            Die();
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & deadlyLayer) != 0)
+        {
+            Debug.Log("☠️ Player touched deadly (trigger): " + collision.gameObject.name);
             Die();
         }
     }
