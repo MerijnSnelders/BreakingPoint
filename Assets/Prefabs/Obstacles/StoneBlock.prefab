@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5970856896503516688}
   - component: {fileID: 9098213064098252193}
   - component: {fileID: 7492644069037277940}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StoneBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.33, y: -4.54, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
