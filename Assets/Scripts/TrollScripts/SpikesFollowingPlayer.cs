@@ -3,18 +3,24 @@ using UnityEngine;
 public class SpikesFollowingPlayer : MonoBehaviour
 {
     [Header("References")]
-    public Transform player;                // Assign your player Transform
-    public Collider2D spikeTopCollider;     // Optional – used for "player above" check
+    public Transform player;
+    public Collider2D spikeTopCollider;
 
     [Header("Chase Settings")]
-    public float speed = 4f;                // Horizontal chase speed
-    public float activateRangeX = 10f;      // How close player must be to start chase
-    public float deactivateRangeX = 12f;    // How far player must be to stop chase
-    public float minPlayerAboveY = 0f;      // Optional: player must be slightly above spike (set to 0 for ground traps)
+    public float speed = 4f;
+    public float activateRangeX = 10f;
+    public float deactivateRangeX = 12f;
+
+    [Header("Rise Settings")]
+    public float riseDistance = 1.5f;
+    public float riseSpeed = 3f;
+    private bool isRising = false;
+    private bool hasRisen = false;
+    private Vector2 riseTargetPos;
 
     [Header("Chase Limits (Markers)")]
-    public Transform leftMarker;            // Empty GameObject marking the left boundary
-    public Transform rightMarker;           // Empty GameObject marking the right boundary
+    public Transform leftMarker;
+    public Transform rightMarker;
 
     private float leftLimitX;
     private float rightLimitX;
@@ -25,52 +31,52 @@ public class SpikesFollowingPlayer : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-            Debug.LogError($"{name}: Missing Rigidbody2D!");
-
-        // Rigidbody2D setup
-        rb.bodyType = RigidbodyType2D.Dynamic;
+        // Initialize Rigidbody settings for a stationary, non-gravity object
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        rb.bodyType = RigidbodyType2D.Dynamic; // Start as Dynamic (stationary)
 
-        SetLimitsFromMarkers();
-    }
-
-    void Start()
-    {
-        // Ensure limits are updated in case markers moved after Awake
         SetLimitsFromMarkers();
     }
 
     void FixedUpdate()
     {
+        // 1. Check for player reference. Do NOT return if hasRisen is true, as this is when the spike should chase.
         if (player == null) return;
 
-        // If markers are moved in editor during play, update limits dynamically
-        SetLimitsFromMarkers();
+        if (isRising)
+        {
+            // Move up smoothly (transform-based)
+            transform.position = Vector2.MoveTowards(transform.position, riseTargetPos, riseSpeed * Time.fixedDeltaTime);
 
-        // --- Distance checks ---
-        float dx = player.position.x - rb.position.x;
-        float absDx = Mathf.Abs(dx);
+            if (Mathf.Abs(transform.position.y - riseTargetPos.y) < 0.01f)
+            {
+                // Rise completed
+                isRising = false;
+                hasRisen = true;
 
-        // Optional "player above" logic (usually ignored for ground spikes)
-        float spikeTopY = spikeTopCollider != null ? spikeTopCollider.bounds.max.y : transform.position.y;
-        float playerFeetY = GetPlayerFeetY();
-        bool playerIsAbove = playerFeetY >= spikeTopY + minPlayerAboveY;
+                // FIX 2: Switch the Rigidbody back to Dynamic so we can move it using velocity (rb.linearVelocity)
+                rb.bodyType = RigidbodyType2D.Dynamic;
+                rb.linearVelocity = Vector2.zero;
+            }
+            return; // Exit FixedUpdate while rising, don't execute chase logic yet.
+        }
 
-        // --- Zone check ---
-        bool inZone = player.position.x >= leftLimitX && player.position.x <= rightLimitX;
+        // 2. Only run the chase logic if the spike has finished rising.
+        if (!hasRisen) return;
 
         // --- CHASE LOGIC ---
+        float dx = player.position.x - rb.position.x;
+        float absDx = Mathf.Abs(dx);
+        bool inZone = player.position.x >= leftLimitX && player.position.x <= rightLimitX;
+
+        // Activation/Deactivation logic based on ranges
         if (!isChasing)
         {
             if (inZone && absDx <= activateRangeX)
-            {
                 isChasing = true;
-                Debug.Log($"{name}: 🟢 CHASE START (player in zone)");
-            }
         }
         else
         {
@@ -78,68 +84,49 @@ public class SpikesFollowingPlayer : MonoBehaviour
             {
                 isChasing = false;
                 rb.linearVelocity = Vector2.zero;
-                Debug.Log($"{name}: 🔴 CHASE STOP (out of zone or too far)");
             }
         }
 
-        // --- MOVEMENT ---
+        // --- MOVE HORIZONTALLY ---
         if (isChasing)
         {
             float dirX = Mathf.Sign(dx);
 
-            // Prevent spikes from leaving bounds
+            // Check if moving would exceed the set boundaries (bounds check)
             if ((dirX < 0 && rb.position.x <= leftLimitX) ||
                 (dirX > 0 && rb.position.x >= rightLimitX))
             {
-                rb.linearVelocity = Vector2.zero;
-                return;
+                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+                return; // Stop movement at the boundary
             }
 
-            rb.linearVelocity = new Vector2(dirX * speed, 0f);
+            // Apply chasing velocity
+            rb.linearVelocity = new Vector2(dirX * speed, rb.linearVelocity.y);
         }
         else
         {
-            rb.linearVelocity = Vector2.zero;
+            // If not chasing, stop horizontal movement
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
+    }
+
+    public void TriggerRise()
+    {
+        if (hasRisen || isRising) return;
+
+        isRising = true;
+        riseTargetPos = new Vector2(transform.position.x, transform.position.y + riseDistance);
+        // Set body type to Kinematic to allow controlled movement via transform.position
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     void SetLimitsFromMarkers()
     {
         if (leftMarker != null && rightMarker != null)
         {
+            // Set limits, ensuring left is always smaller than right
             leftLimitX = Mathf.Min(leftMarker.position.x, rightMarker.position.x);
             rightLimitX = Mathf.Max(leftMarker.position.x, rightMarker.position.x);
         }
-    }
-
-    float GetPlayerFeetY()
-    {
-        if (player != null)
-        {
-            var col = player.GetComponent<Collider2D>();
-            if (col != null)
-                return col.bounds.min.y;
-        }
-        return player != null ? player.position.y - 0.5f : float.NegativeInfinity;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        SetLimitsFromMarkers();
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector3(leftLimitX, transform.position.y + 0.5f, 0f),
-                        new Vector3(rightLimitX, transform.position.y + 0.5f, 0f));
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(new Vector3(leftLimitX, transform.position.y - 0.5f, 0f),
-                        new Vector3(rightLimitX, transform.position.y - 0.5f, 0f));
-    }
-
-    void OnValidate()
-    {
-        if (deactivateRangeX < activateRangeX)
-            deactivateRangeX = activateRangeX + 0.1f;
-
-        // Update limits when editing in inspector
-        SetLimitsFromMarkers();
     }
 }
