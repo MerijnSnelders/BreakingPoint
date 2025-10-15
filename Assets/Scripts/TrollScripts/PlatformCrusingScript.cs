@@ -4,6 +4,7 @@ public class PlatformCrusingScript : MonoBehaviour
 {
     private Rigidbody2D rb;
     private bool hasFallen = false;
+    public float gravityScale = 20f;
 
     void Start()
     {
@@ -16,6 +17,6 @@ public class PlatformCrusingScript : MonoBehaviour
         hasFallen = true;
 
         rb.bodyType = RigidbodyType2D.Dynamic; // enable gravity
-        rb.gravityScale = 10f;                  // adjust as needed
+        rb.gravityScale = gravityScale;                  // adjust as needed
     }
 }

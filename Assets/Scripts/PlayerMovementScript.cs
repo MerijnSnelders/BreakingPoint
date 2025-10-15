@@ -34,6 +34,7 @@ public class PlayerMovementScript : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Application.targetFrameRate = 60; 
     }
 
     private void Update()
