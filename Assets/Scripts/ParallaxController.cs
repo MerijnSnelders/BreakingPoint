@@ -1,107 +1,73 @@
 using UnityEngine;
 
 /// <summary>
-/// Controls the movement of multiple background layers to create a Parallax scrolling effect
-/// and automatically tiles them to create an infinitely long background.
+/// Controls the movement and infinite looping of a single background tile.
+/// NOTE: This script is applied to ONE tile per layer and automatically handles the looping.
 /// </summary>
 public class ParallaxController : MonoBehaviour
 {
-    // A structure to hold both the background Transform and its parallax factor, plus tiling info.
-    [System.Serializable]
-    public struct ParallaxLayer
-    {
-        [Tooltip("The Transform of the individual background tile.")]
-        public Transform background;
-        [Tooltip("How much slower or faster this layer moves relative to the camera.")]
-        [Range(0f, 2f)]
-        public float parallaxFactor;
-        [Tooltip("The width of the background tile in Unity units (e.g., 20.48). This MUST be accurate for seamless tiling.")]
-        public float tileWidth;
-        // The parallaxGroup ID is kept for future grouping but not strictly necessary for simple tiling.
-        public int parallaxGroup;
-    }
+    // The initial X position of the tile in the scene (saved in Start).
+    private float startPos;
+
+    // The calculated width of the sprite in world units.
+    private float length;
 
     [Header("Setup")]
-    [Tooltip("The Transform of the camera this script should follow (usually Main Camera).")]
-    public Transform mainCamera;
+    [Tooltip("The camera object that will drive the parallax effect.")]
+    public GameObject cam;
 
-    [Header("Layers")]
-    [Tooltip("Drag all ORIGINAL background tiles and their respective COPIES here.")]
-    public ParallaxLayer[] layers;
+    [Tooltip("The factor by which this layer moves relative to the camera (0.0=distant, 1.0=foreground).")]
+    [Range(0f, 1f)]
+    public float parallaxEffect = 0.5f;
 
-    private Vector3 lastCameraPosition;
-
-    void Start()
+    private void Start()
     {
-        // Safety check to ensure the camera is assigned.
-        if (mainCamera == null)
-        {
-            Camera cam = Camera.main;
-            if (cam != null)
-            {
-                mainCamera = cam.transform;
-            }
-            else
-            {
-                Debug.LogError("ParallaxController requires a Main Camera. Please assign one.");
-                enabled = false;
-                return;
-            }
-        }
+        // Get the initial X position of this tile.
+        startPos = transform.position.x;
 
-        // Store the camera's starting position for movement calculation.
-        lastCameraPosition = mainCamera.position;
+        // Get the exact width of the SpriteRenderer's bounding box in world units.
+        // This is crucial for seamless looping.
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            length = sr.bounds.size.x;
+        }
+        else
+        {
+            Debug.LogError("ParallaxController needs a SpriteRenderer on the same GameObject to calculate its length for looping.");
+            enabled = false;
+        }
     }
 
-    void LateUpdate()
+    private void LateUpdate() // Changed to LateUpdate for smoother camera-following
     {
-        // 1. Calculate how much the camera has moved since the last frame.
-        Vector3 cameraDelta = mainCamera.position - lastCameraPosition;
+        if (cam == null) return;
 
-        // 2. Iterate through all background layers (originals and copies) and apply the movement.
-        foreach (var layer in layers)
+        // Calculate the distance the camera has moved since the start of the scene, 
+        // multiplied by the parallax factor.
+        float distanceMoved = cam.transform.position.x * parallaxEffect;
+
+        // Calculate the position where the tile should be.
+        // This is the starting position + the parallax movement.
+        transform.position = new Vector3(startPos + distanceMoved, transform.position.y, transform.position.z);
+
+        // --- LOOPING LOGIC ---
+
+        // Calculate the actual distance the camera has moved at a 1:1 ratio.
+        // This is used to determine when the tile needs to loop.
+        float currentCameraMovement = cam.transform.position.x * (1 - parallaxEffect);
+
+        // Check if the camera has moved past the right edge of the current tile.
+        if (currentCameraMovement > startPos + length)
         {
-            if (layer.background == null) continue;
-
-            // Apply Parallax Movement
-            // --------------------------------------------------------------------------------
-
-            // Calculate the proportional movement for this layer.
-            // movement.x will be used for horizontal parallax
-            Vector3 movement = cameraDelta * layer.parallaxFactor;
-
-            // Apply the movement to the background layer's position (only modifying X and Y).
-            layer.background.position += new Vector3(movement.x, movement.y, 0f);
-
-            // Apply Tiling/Looping Logic (Horizontal only)
-            // --------------------------------------------------------------------------------
-
-            // Calculate half of the total tiling area needed for the loop to work (since we have 2 tiles).
-            // The boundary is the camera position plus or minus one tile width.
-
-            // If the layer moves slower than the camera, the layer's parallax factor will be < 1.0.
-            // As the camera moves right, the layer moves left relative to the camera center.
-
-            float distanceToCameraX = mainCamera.position.x - layer.background.position.x;
-
-            // Check if the tile has moved fully out of view to the left (player moving right).
-            // We check if the camera's position relative to the layer's start is greater than 
-            // half the total loop distance (one tile width).
-            if (distanceToCameraX > layer.tileWidth)
-            {
-                // Snap the tile forward by exactly one tile width.
-                // It will jump to the position currently occupied by its partner tile's previous spot.
-                layer.background.position += new Vector3(layer.tileWidth, 0f, 0f);
-            }
-            // Check if the tile has moved fully out of view to the right (player moving left).
-            else if (distanceToCameraX < -layer.tileWidth)
-            {
-                // Snap the tile backward by exactly one tile width.
-                layer.background.position -= new Vector3(layer.tileWidth, 0f, 0f);
-            }
+            // If the camera moves far enough right, snap the start position forward by one tile length.
+            startPos += length;
         }
-
-        // 3. Update the camera's position for the next frame's calculation.
-        lastCameraPosition = mainCamera.position;
+        // Check if the camera has moved past the left edge of the current tile.
+        else if (currentCameraMovement < startPos - length)
+        {
+            // If the camera moves far enough left, snap the start position backward by one tile length.
+            startPos -= length;
+        }
     }
 }
