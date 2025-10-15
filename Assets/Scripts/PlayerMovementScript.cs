@@ -20,6 +20,9 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] float JumpBufferTime = 0.2f;
     [SerializeField] float JumpCutMultiplier = 0.5f;
 
+    private bool isLaunched = false;
+    private float launchTimer = 0f;
+
     private float _horizontalMovement;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
@@ -55,7 +58,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Handle launch state (ignore input briefly)
+        if (isLaunched)
+        {
+            launchTimer -= Time.fixedDeltaTime;
+            if (launchTimer <= 0f)
+                isLaunched = false;
+
+            return; // skip normal movement this frame
+        }
+
         if (!CanMove) return;
+
+        // Normal movement
         _rb.linearVelocityX = _horizontalMovement;
 
         // Flip player
@@ -70,6 +85,7 @@ public class PlayerMovementScript : MonoBehaviour
         else
             _rb.gravityScale = 2.5f;
     }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -110,4 +126,12 @@ public class PlayerMovementScript : MonoBehaviour
     {
         return Physics2D.OverlapCircle(GroundCheck.position, 0.2f, GroundLayer);
     }
+
+    public void Launch(Vector2 velocity, float duration = 0.3f)
+    {
+        isLaunched = true;
+        launchTimer = duration;
+        _rb.linearVelocity = velocity;   // instantly apply launch
+    }
+
 }

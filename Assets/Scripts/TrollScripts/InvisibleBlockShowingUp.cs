@@ -35,12 +35,24 @@ public class InvisibleBlockShowingUp : MonoBehaviour
         float blockX = blockRenderer.bounds.center.x;
 
         // ✅ NEW: only trigger if player is roughly below the block horizontally
-        float horizontalTolerance = blockRenderer.bounds.extents.x * 1f;
+        float horizontalTolerance = blockRenderer.bounds.extents.x * 1.6f;
         bool isUnderHorizontally = Mathf.Abs(playerX - blockX) < horizontalTolerance;
 
+        // ✅ More lenient condition
+        // Allow a small buffer below the block (so hitting edges or just before velocity flips still counts)
+        bool isBelowBlock = playerY < (blockY - 0.1f);
+
+        // ✅ Relaxed upward check — allow slight negative speed to still trigger
+        bool movingUpwardEnough = playerRb.linearVelocity.y > -1f;
+
         // ✅ Only trigger if player is below, under horizontally, and moving upward
-        if (playerRb.linearVelocity.y > 0f && playerY < blockY && isUnderHorizontally)
+        if (isBelowBlock && isUnderHorizontally && movingUpwardEnough)
         {
+            // 💥 Small bounce effect
+            Vector2 newVelocity = playerRb.linearVelocity;
+            newVelocity.y = -4f;
+            playerRb.linearVelocity = newVelocity;
+
             StartCoroutine(ActivateBlock());
         }
     }
