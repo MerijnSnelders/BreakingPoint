@@ -1,25 +1,32 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PlayerDeath : MonoBehaviour
 {
-    [SerializeField] private float fallThreshold = -10f; // Y position below which player dies
-    [SerializeField] private LayerMask deadlyLayer; // assign DeadlyObstacle layer in inspector
+    [SerializeField] private float fallThreshold = -10f;
+    [SerializeField] private LayerMask deadlyLayer;
 
     private Animator animator;
     private bool isDying = false;
     private Rigidbody2D rb;
-    private PlayerMovementScript movementScript; // reference to your movement controller
+    private PlayerMovementScript movementScript;
+
+    // ✅ Add this:
+    private Vector2 respawnPoint;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         movementScript = GetComponent<PlayerMovementScript>();
+
+        // Set default respawn point at the player’s start position
+        respawnPoint = transform.position;
     }
 
     private void Update()
     {
-        if (isDying) return; // prevent dying twice
+        if (isDying) return;
 
         if (transform.position.y < fallThreshold)
         {
@@ -54,11 +61,9 @@ public class PlayerDeath : MonoBehaviour
 
         Debug.Log("Player Died!");
 
-        // 🔒 Lock player movement
         if (movementScript != null)
             movementScript.CanMove = false;
 
-        // 🧊 Stop physics movement
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -66,14 +71,11 @@ public class PlayerDeath : MonoBehaviour
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
 
-        // 🎲 Pick random death animation
-        int randomDeath = Random.Range(1, 3); // chooses 1 or 2
+        int randomDeath = Random.Range(1, 3);
         animator.SetTrigger("Die" + randomDeath);
-        Debug.Log("Die" + randomDeath);
 
-        // ⏳ Wait until animation is done, then reload
         float animLength = GetAnimationClipLength("Death" + randomDeath) + 0.75f;
-        Invoke(nameof(ReloadScene), animLength);
+        Invoke(nameof(RespawnAtCheckpoint), animLength);
     }
 
     private float GetAnimationClipLength(string clipName)
@@ -86,10 +88,31 @@ public class PlayerDeath : MonoBehaviour
         return 1f;
     }
 
-    private void ReloadScene()
+    // ✅ New respawn logic
+    private void RespawnAtCheckpoint()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
+        Debug.Log("Respawning at checkpoint...");
+
+        // Reset death state
+        isDying = false;
+
+        // Re-enable movement
+        if (movementScript != null)
+            movementScript.CanMove = true;
+
+        // Re-enable physics
+        rb.constraints = RigidbodyConstraints2D.None;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.gravityScale = 1f;
+
+        // Move player to checkpoint
+        transform.position = respawnPoint;
+    }
+
+    // ✅ Public setter for checkpoint
+    public void SetCheckpoint(Vector2 newCheckpoint)
+    {
+        respawnPoint = newCheckpoint;
+        Debug.Log("Checkpoint set to: " + newCheckpoint);
     }
 }
