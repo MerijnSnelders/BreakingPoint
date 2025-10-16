@@ -258,6 +258,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4329052989325450024, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4329052989325450024, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104659487923533304, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104659487923533304, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -319,6 +335,22 @@ PrefabInstance:
     - target: {fileID: 4296980779186799096, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4329052989325450024, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4329052989325450024, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104659487923533304, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104659487923533304, guid: 56daaff05f1401d4eb43b5ce71ebcc07, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
