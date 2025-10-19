@@ -6,6 +6,10 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] private float fallThreshold = -10f;
     [SerializeField] private LayerMask deadlyLayer;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip deathSound;
+
+
     private Animator animator;
     private bool isDying = false;
     private Rigidbody2D rb;
@@ -68,6 +72,9 @@ public class PlayerDeath : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        if (audioSource != null && deathSound != null)
+            audioSource.PlayOneShot(deathSound);
 
         int randomDeath = Random.Range(1, 3);
         animator.SetTrigger("Die" + randomDeath);
