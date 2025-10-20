@@ -6,41 +6,43 @@ public class FallingGround : MonoBehaviour
     private bool hasFallen = false;
 
     [Header("Settings")]
-    public float fallGravity = 5f;        // how fast it falls
-    public float requiredCenterMargin = 0.1f; // how centered the player must be
+    public float fallGravity = 5f;
+    [Range(0f, 1f)]
+    public float requiredCoverage = 1f;
+    // 1.0 = player must be fully on top
+    // 0.5 = half of player width must be on top
+    // 0.1 = only small part must be on top
+
+    public float requiredCenterMargin = 0.1f; // tolerance margin
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
         if (rb == null)
             Debug.LogError($"{name}: Missing Rigidbody2D!");
 
-        rb.bodyType = RigidbodyType2D.Kinematic; // starts frozen
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log($"{name}: Colliding with {collision.collider.name} (Tag: {collision.collider.tag})");
-
-
-        // Don’t trigger again
         if (hasFallen) return;
-
-        // Only react to player
         if (!collision.collider.CompareTag("Player")) return;
 
-        // Get collider bounds
-        Bounds playerBounds = collision.collider.bounds;
-        Bounds platformBounds = GetComponent<Collider2D>().bounds;
+        Bounds player = collision.collider.bounds;
+        Bounds platform = GetComponent<Collider2D>().bounds;
 
-        // ✅ Check if the player's whole width is within the platform
-        bool fullyOnPlatform =
-            playerBounds.min.x > platformBounds.min.x + requiredCenterMargin &&
-            playerBounds.max.x < platformBounds.max.x - requiredCenterMargin &&
-            playerBounds.min.y >= platformBounds.max.y - 0.05f; // small tolerance
+        // Calculate how much of the player’s width overlaps with the platform
+        float overlapMin = Mathf.Max(player.min.x, platform.min.x);
+        float overlapMax = Mathf.Min(player.max.x, platform.max.x);
+        float overlapWidth = Mathf.Max(0, overlapMax - overlapMin);
 
-        if (fullyOnPlatform)
+        float coverage = overlapWidth / player.size.x; // percentage of player width supported
+
+        bool enoughCoverage = coverage >= requiredCoverage;
+        bool onTop = player.min.y >= platform.max.y - 0.05f;
+
+        if (enoughCoverage && onTop)
         {
             FallNow();
         }
@@ -55,11 +57,10 @@ public class FallingGround : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
-        // Optional: disable collision with ground layer so it doesn't get stuck
         int groundLayer = LayerMask.NameToLayer("Ground");
         if (groundLayer >= 0)
             Physics2D.IgnoreLayerCollision(gameObject.layer, groundLayer, true);
 
-        Debug.Log($"{name}: Player fully on top — falling now!");
+        Debug.Log($"{name}: Player coverage met — falling now!");
     }
 }

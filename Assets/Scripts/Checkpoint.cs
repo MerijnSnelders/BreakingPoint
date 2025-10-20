@@ -3,31 +3,41 @@
 public class Checkpoint : MonoBehaviour
 {
     [Header("Visuals")]
-    public SpriteRenderer flagRenderer;      // Assign your flag sprite
-    public Animator flagAnimator;            // Optional – assign if you have animation
+    public SpriteRenderer flagRenderer;
+    public Animator flagAnimator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip checkpointSound;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!collision.CompareTag("Player"))
+            return;
 
+        PlayerDeath playerDeath = collision.GetComponent<PlayerDeath>();
+        if (playerDeath != null)
+            playerDeath.SetCheckpoint(transform.position);
 
-        if (collision.CompareTag("Player"))
+        ActivateFlag();
+
+        // ✅ Only play once per level
+        if (!PlayerDeath.HasCheckpointSoundPlayed())
         {
-            // ✅ Update player checkpoint
-            PlayerDeath playerDeath = collision.GetComponent<PlayerDeath>();
-            if (playerDeath != null)
-                playerDeath.SetCheckpoint(transform.position);
-
-            ActivateFlag();
+            PlayCheckpointSound();
+            PlayerDeath.MarkCheckpointSoundPlayed();
         }
     }
 
     private void ActivateFlag()
     {
-        // Trigger animation if available
         if (flagAnimator != null)
             flagAnimator.SetTrigger("Activate");
+    }
 
-        Debug.Log("Checkpoint activated!");
+    private void PlayCheckpointSound()
+    {
+        if (audioSource != null && checkpointSound != null)
+            audioSource.PlayOneShot(checkpointSound);
     }
 }

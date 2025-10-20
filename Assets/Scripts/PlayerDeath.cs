@@ -3,21 +3,39 @@ using UnityEngine.SceneManagement;
 
 public class PlayerDeath : MonoBehaviour
 {
+    [Header("Death Settings")]
     [SerializeField] private float fallThreshold = -10f;
     [SerializeField] private LayerMask deadlyLayer;
 
+    [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip deathSound;
-
 
     private Animator animator;
     private bool isDying = false;
     private Rigidbody2D rb;
     private PlayerMovementScript movementScript;
 
+    // ✅ Checkpoint system
     private static Vector2 respawnPoint;
     private static bool hasCheckpoint = false;
     private static bool diedOnce = false;
+
+    // ✅ Checkpoint sound persistence
+    private static bool checkpointSoundPlayed = false;
+    private static string lastSceneName = null;
+
+    void Awake()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        // ✅ Only reset checkpoint sound if a *different* level is loaded
+        if (lastSceneName != currentScene)
+        {
+            checkpointSoundPlayed = false;
+            lastSceneName = currentScene;
+        }
+    }
 
     void Start()
     {
@@ -25,14 +43,13 @@ public class PlayerDeath : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         movementScript = GetComponent<PlayerMovementScript>();
 
-        // ✅ Only move to checkpoint if we already died before
+        // ✅ Move to checkpoint if we’ve died once and have one saved
         if (diedOnce && hasCheckpoint)
         {
             transform.position = respawnPoint;
         }
         else
         {
-            // Start at natural starting point
             respawnPoint = transform.position;
         }
     }
@@ -92,7 +109,7 @@ public class PlayerDeath : MonoBehaviour
 
     private void ReloadScene()
     {
-        diedOnce = true; // ✅ mark that we've died once
+        diedOnce = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -103,4 +120,8 @@ public class PlayerDeath : MonoBehaviour
         hasCheckpoint = true;
         Debug.Log("Checkpoint set to: " + newCheckpoint);
     }
+
+    // ✅ Checkpoint sound management
+    public static bool HasCheckpointSoundPlayed() => checkpointSoundPlayed;
+    public static void MarkCheckpointSoundPlayed() => checkpointSoundPlayed = true;
 }
