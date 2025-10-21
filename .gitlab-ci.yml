@@ -1,44 +1,41 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+# -------------------------------------------------------------------
+# Simple GitLab CI Pipeline for Unity
+# -------------------------------------------------------------------
 
-stages:          # List of stages for jobs, and their order of execution
-  - build
-  - deploy
+# This pipeline will use the environment of the GitLab Runner itself.
 
+stages:
+  - build # The deploy stage has been removed as requested
+
+# -------------------------------------------------------------------
+# BUILD JOB: Compiles code and attempts a Windows build
+# -------------------------------------------------------------------
 build-job: # This job runs in the build stage.
   stage: build
   
   # Define the path to your Unity executable on the Runner machine
   variables:
-    # ⚠️ Using forward slashes (/) for reliability in CI scripts
+    # Using forward slashes (/) for reliability in CI scripts
     UNITY_PATH: C:/Program Files/Unity/Hub/Editor/6000.1.9f1/Editor/Unity.exe
 
   script:
-    - echo "Compiling the code..." # User's initial echo
+    - echo "Compiling the code..."
     - echo "Starting Unity Compilation and Build Check using $UNITY_PATH..."
     
-    # Execute the Unity command using the defined path. This forces compilation.
-    - $UNITY_PATH -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe
+    # 💡 FIX APPLIED: Using the PowerShell call operator (&) and quotes to correctly 
+    # execute the external Unity application and pass its arguments (-batchmode, -nographics, etc.).
+    - '& "$UNITY_PATH" -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe'
     
-    - cat build.log
-    - echo "Compile complete." # User's final echo
+    # Using 'type' (PowerShell alias for Get-Content) to read the log file correctly.
+    - type build.log
+    - echo "Compile complete."
   
   artifacts:
     when: always
     paths:
       - build.log
+
+
+  only:
+    - develop
+    - main
