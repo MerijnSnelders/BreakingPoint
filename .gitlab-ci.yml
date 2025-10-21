@@ -1,9 +1,3 @@
-# -------------------------------------------------------------------
-# Simple GitLab CI Pipeline for Unity
-# -------------------------------------------------------------------
-
-# This pipeline will use the environment of the GitLab Runner itself.
-
 stages:
   - build # The deploy stage has been removed as requested
 
@@ -22,16 +16,10 @@ build-job: # This job runs in the build stage.
     - echo "Compiling the code..."
     - echo "Starting Unity Compilation and Build Check using $UNITY_PATH..."
     
-    # 💡 FIX APPLIED: Using the PowerShell call operator (&) and quotes to correctly 
-    # execute the external Unity application and pass its arguments (-batchmode, -nographics, etc.).
-    - '& "$UNITY_PATH" -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe'
+    # 💡 FIX: Added -quit flag. This is MANDATORY in batch mode to ensure the 
+    # process exits cleanly and releases the file handle for build.log.
+    - '& "$UNITY_PATH" -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe -quit'
     
     # Using 'type' (PowerShell alias for Get-Content) to read the log file correctly.
     - type build.log
     - echo "Compile complete."
-  
-  artifacts:
-    when: always
-    paths:
-      - build.log
-
