@@ -1,0 +1,37 @@
+# -------------------------------------------------------------------
+# Simple GitLab CI Pipeline for Unity
+# -------------------------------------------------------------------
+
+
+# The job will use the environment of the GitLab Runner itself.
+
+stages:
+  - build
+
+# -------------------------------------------------------------------
+# BUILD JOB: Compiles code and attempts a Windows build
+# -------------------------------------------------------------------
+windows_build_check:
+  stage: build
+  
+  # Define the path to your Unity executable on the Runner machine
+  variables:
+    UNITY_PATH: C:/Program Files/Unity/Hub/Editor/6000.1.9f1/Editor/Unity.exe
+
+  script:
+    - echo "Starting Unity Compilation and Build Check..."
+    
+    # Execute the Unity command using the defined path
+    - $UNITY_PATH -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe
+    - cat build.log
+    - echo "Build process finished. Check build.log for errors."
+  
+  artifacts:
+    when: always
+    paths:
+      - build.log
+
+
+  only:
+    - develop
+    - main
