@@ -35,7 +35,3 @@ build-job: # This job runs in the build stage.
     paths:
       - build.log
 
-
-  only:
-    - develop
-    - main
