@@ -16,10 +16,14 @@ build-job: # This job runs in the build stage.
     - echo "Compiling the code..."
     - echo "Starting Unity Compilation and Build Check using $UNITY_PATH..."
     
-    # 💡 FIX: Added -quit flag. This is MANDATORY in batch mode to ensure the 
-    # process exits cleanly and releases the file handle for build.log.
+    # 💡 FIX APPLIED: Added -quit flag and ensured correct PowerShell call syntax.
     - '& "$UNITY_PATH" -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe -quit'
+    
+    # ⏱️ FIX FOR TIMING: Add a sleep command. This gives the OS time to finalize 
+    # the I/O operation and release the file handle before 'type' attempts to read it.
+    - Start-Sleep -Seconds 5
     
     # Using 'type' (PowerShell alias for Get-Content) to read the log file correctly.
     - type build.log
     - echo "Compile complete."
+  
