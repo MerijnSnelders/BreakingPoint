@@ -5704,8 +5704,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 375090964}
   fixedY: 0
-  fixedStartX: 0
   smoothSpeed: 0.125
+  leftClampX: -25.66
 --- !u!1001 &1009270806
 PrefabInstance:
   m_ObjectHideFlags: 0
