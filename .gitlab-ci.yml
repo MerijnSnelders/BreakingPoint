@@ -11,8 +11,9 @@ stages:
 # -------------------------------------------------------------------
 # BUILD JOB: Compiles code and attempts a Windows build
 # -------------------------------------------------------------------
-windows_build_check:
+build-job:       # This job runs in the build stage, which runs first.
   stage: build
+
   
   # Define the path to your Unity executable on the Runner machine
   variables:
