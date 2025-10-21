@@ -5704,6 +5704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 375090964}
   fixedY: 0
+  fixedStartX: 0
   smoothSpeed: 0.125
 --- !u!1001 &1009270806
 PrefabInstance:
@@ -5869,7 +5870,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 62.9
+      value: -23.49
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
