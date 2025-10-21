@@ -1,37 +1,29 @@
-# -------------------------------------------------------------------
-# Simple GitLab CI Pipeline for Unity
-# -------------------------------------------------------------------
-
-
-# The job will use the environment of the GitLab Runner itself.
-
 stages:
-  - build
+  - build # The deploy stage has been removed as requested
 
 # -------------------------------------------------------------------
 # BUILD JOB: Compiles code and attempts a Windows build
 # -------------------------------------------------------------------
-windows_build_check:
+build-job: # This job runs in the build stage.
   stage: build
   
   # Define the path to your Unity executable on the Runner machine
   variables:
+    # Using forward slashes (/) for reliability in CI scripts
     UNITY_PATH: C:/Program Files/Unity/Hub/Editor/6000.1.9f1/Editor/Unity.exe
 
   script:
-    - echo "Starting Unity Compilation and Build Check..."
+    - echo "Compiling the code..."
+    - echo "Starting Unity Compilation and Build Check using $UNITY_PATH..."
     
-    # Execute the Unity command using the defined path
-    - $UNITY_PATH -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe
-    - cat build.log
-    - echo "Build process finished. Check build.log for errors."
+    # 💡 FIX APPLIED: Added -quit flag and ensured correct PowerShell call syntax.
+    - '& "$UNITY_PATH" -batchmode -nographics -logFile build.log -projectPath . -buildWindowsPlayer ./Builds/TestBuild/Game.exe -quit'
+    
+    # ⏱️ FIX FOR TIMING: Add a sleep command. This gives the OS time to finalize 
+    # the I/O operation and release the file handle before 'type' attempts to read it.
+    - Start-Sleep -Seconds 5
+    
+    # Using 'type' (PowerShell alias for Get-Content) to read the log file correctly.
+    - type build.log
+    - echo "Compile complete."
   
-  artifacts:
-    when: always
-    paths:
-      - build.log
-
-
-  only:
-    - develop
-    - main
