@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 537523603125762354}
   - component: {fileID: 2452157663407314482}
   - component: {fileID: 3903613871914379452}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BrokenStoneBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.3, y: 0.3}
+    oldSize: {x: 0.28, y: 0.28}
     newSize: {x: 0.3, y: 0.3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
