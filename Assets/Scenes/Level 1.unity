@@ -14177,6 +14177,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1006601774}
+    - target: {fileID: 1733540901707540384, guid: 7b70b88f0b76cfc42862a7a5059a9b74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 19.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1744180788202993836, guid: 7b70b88f0b76cfc42862a7a5059a9b74, type: 3}
       propertyPath: m_SortingLayer
       value: -3
