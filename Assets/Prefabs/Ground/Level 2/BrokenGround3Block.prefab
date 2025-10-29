@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3179396310800431406}
   - component: {fileID: 2382592089429765602}
+  - component: {fileID: 5436322849695925570}
   m_Layer: 6
   m_Name: BrokenGround3Block
   m_TagString: Untagged
@@ -84,6 +85,33 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 6.800354, y: 4.5719748}
   m_EdgeRadius: 0
+--- !u!50 &5436322849695925570
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065908384484841713}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!1001 &222453042687535420
 PrefabInstance:
   m_ObjectHideFlags: 0

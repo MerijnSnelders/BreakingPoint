@@ -13,6 +13,12 @@ public class InvisibleBlockShowingUp : MonoBehaviour
     public float popHeight = 0f;
     public float popSpeed = 5f;
 
+    [Header("Trap Settings")]
+    [Tooltip("If checked, the block breaks/disappears when stepped on by the player.")]
+    public bool breakWhenSteppedOn = false;
+    [Tooltip("How long before the block disappears after the player steps on it.")]
+    public float breakDelay = 0f;
+
     private void Start()
     {
         // Hide and disable at start
@@ -28,27 +34,19 @@ public class InvisibleBlockShowingUp : MonoBehaviour
         Rigidbody2D playerRb = other.GetComponent<Rigidbody2D>();
         if (playerRb == null) return;
 
-        // --- Get positions for checks ---
         float playerY = other.bounds.center.y;
         float blockY = blockRenderer.bounds.center.y;
         float playerX = other.bounds.center.x;
         float blockX = blockRenderer.bounds.center.x;
 
-        // ✅ NEW: only trigger if player is roughly below the block horizontally
         float horizontalTolerance = blockRenderer.bounds.extents.x * 1.6f;
         bool isUnderHorizontally = Mathf.Abs(playerX - blockX) < horizontalTolerance;
-
-        // ✅ More lenient condition
-        // Allow a small buffer below the block (so hitting edges or just before velocity flips still counts)
         bool isBelowBlock = playerY < (blockY - 0.1f);
-
-        // ✅ Relaxed upward check — allow slight negative speed to still trigger
         bool movingUpwardEnough = playerRb.linearVelocity.y > -1f;
 
-        // ✅ Only trigger if player is below, under horizontally, and moving upward
+        // ✅ Only trigger from below
         if (isBelowBlock && isUnderHorizontally && movingUpwardEnough)
         {
-            // 💥 Small bounce effect
             Vector2 newVelocity = playerRb.linearVelocity;
             newVelocity.y = -4f;
             playerRb.linearVelocity = newVelocity;
@@ -80,5 +78,42 @@ public class InvisibleBlockShowingUp : MonoBehaviour
         }
 
         blockRenderer.transform.position = endPos;
+    }
+
+    // ✅ NEW: detects if player steps *on top* of an active block
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!isActive || !breakWhenSteppedOn) return;
+        if (!collision.collider.CompareTag("Player")) return;
+
+        // Check if the player is above the block
+        ContactPoint2D contact = collision.contacts[0];
+        if (contact.point.y > blockRenderer.bounds.center.y)
+        {
+            StartCoroutine(BreakBlock());
+        }
+    }
+
+    private IEnumerator BreakBlock()
+    {
+        yield return new WaitForSeconds(breakDelay);
+
+        if (blockCollider != null) blockCollider.enabled = false;
+
+        // Optional: small fade-out effect
+        if (blockRenderer != null)
+        {
+            Color c = blockRenderer.color;
+            float t = 0f;
+            while (t < 1f)
+            {
+                t += Time.deltaTime * 3f;
+                c.a = Mathf.Lerp(1f, 0f, t);
+                blockRenderer.color = c;
+                yield return null;
+            }
+        }
+
+        gameObject.SetActive(false); // hide completely
     }
 }
