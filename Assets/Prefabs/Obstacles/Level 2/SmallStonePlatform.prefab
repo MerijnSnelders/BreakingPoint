@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2880741682059062616}
   - component: {fileID: 4132366631239806321}
   - component: {fileID: 7218579955155750281}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SmallStonePlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.61, y: 0.13}
+    oldSize: {x: 0.59, y: 0.11}
     newSize: {x: 0.61, y: 0.13}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
