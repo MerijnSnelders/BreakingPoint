@@ -1117,11 +1117,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 216.6
+      value: 272.4
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2721,7 +2721,7 @@ MonoBehaviour:
   popHeight: 0
   popSpeed: 5
   breakWhenSteppedOn: 1
-  breakDelay: 0.1
+  breakDelay: 0.5
 --- !u!1001 &232254991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10591,7 +10591,7 @@ MonoBehaviour:
   popHeight: 0
   popSpeed: 5
   breakWhenSteppedOn: 1
-  breakDelay: 0.1
+  breakDelay: 0.5
 --- !u!1001 &967566880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11505,7 +11505,7 @@ MonoBehaviour:
   popHeight: 0
   popSpeed: 5
   breakWhenSteppedOn: 1
-  breakDelay: 0.1
+  breakDelay: 0.5
 --- !u!1001 &1045039353
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17468,7 +17468,7 @@ MonoBehaviour:
   popHeight: 0
   popSpeed: 5
   breakWhenSteppedOn: 0
-  breakDelay: 0.1
+  breakDelay: 0.5
 --- !u!4 &1765395340 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 133375987533863045, guid: e73f5ceaf478e4f418d96debfd57bed1, type: 3}
