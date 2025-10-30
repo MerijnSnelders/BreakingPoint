@@ -14,6 +14,7 @@ public class movingplatformScript : MonoBehaviour
     public int repeatCount = 6;
     public float upwardDistance = 3f;
 
+
     [Header("Activation")]
     public bool startOnTrigger = true; // alleen starten bij trigger
     private bool isActivated = false;
@@ -28,16 +29,43 @@ public class movingplatformScript : MonoBehaviour
     }
 
     // --- Trigger wordt geactiveerd door een apart object ---
-    public void ActivatePlatform()
+    public void ActivatePlatform(bool isPlatform1)
     {
         if (!isActivated)
         {
             isActivated = true;
-            moveRoutine = StartCoroutine(MovePlatform());
+            if(isPlatform1)
+                moveRoutine = StartCoroutine(MovePlatform1());
+            else
+                moveRoutine = StartCoroutine(MovePlatform2());
         }
     }
 
-    private IEnumerator MovePlatform()
+    private IEnumerator MovePlatform1()
+    {
+        Vector3 startPoint = pointA.position;
+        Vector3 midPoint = pointB.position;
+        Vector3 midPoint2 = pointC.position;
+        Vector3 endPoint = pointD.position;
+        int currentRepeat = 0;
+
+        // Heen-en-weer beweging
+        
+
+        // Naar eindpunt
+        yield return MoveBetweenPoints(startPoint, midPoint);
+
+        speed = 15;
+
+        yield return MoveBetweenPoints(midPoint, midPoint2);
+
+        speed = 4;
+
+        yield return MoveBetweenPoints(midPoint2, endPoint);
+
+    }
+
+    private IEnumerator MovePlatform2()
     {
         Vector3 startPoint = pointA.position;
         Vector3 midPoint = pointB.position;
