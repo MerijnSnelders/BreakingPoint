@@ -794,6 +794,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 84277449}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!61 &84277448 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 2404323448067064522, guid: cc1062ffc0e7e3c448c5c326ac6350ce, type: 3}
@@ -1696,6 +1698,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 250510202}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!4 &250732628 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3689958765669390418, guid: cef59cc762661454887713c2bbfcca0b, type: 3}
@@ -3547,6 +3551,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 578519059}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!50 &578519057
 Rigidbody2D:
   serializedVersion: 5
@@ -5705,7 +5711,7 @@ MonoBehaviour:
   player: {fileID: 375090964}
   fixedY: 0
   smoothSpeed: 0.125
-  leftClampX: -25.66
+  leftClampX: -7.99
 --- !u!1001 &1009270806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6661,6 +6667,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 1119226481}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!1 &1123019709 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3898613147268431091, guid: c79727bfbb394ca4397106a714789f68, type: 3}
@@ -7174,6 +7182,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 1207350614}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!61 &1207350613 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 2404323448067064522, guid: cc1062ffc0e7e3c448c5c326ac6350ce, type: 3}
@@ -7946,6 +7956,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 1417867397}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!61 &1417867396 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 2404323448067064522, guid: cc1062ffc0e7e3c448c5c326ac6350ce, type: 3}
@@ -9283,6 +9295,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 1600551966}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!50 &1600551968
 Rigidbody2D:
   serializedVersion: 5
@@ -9683,6 +9697,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 1640757108}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!61 &1640757107 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 2404323448067064522, guid: cc1062ffc0e7e3c448c5c326ac6350ce, type: 3}
@@ -9742,6 +9758,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 0}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!61 &1649843911
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12865,6 +12883,8 @@ MonoBehaviour:
   blockRenderer: {fileID: 2003343374}
   popHeight: 0
   popSpeed: 5
+  breakWhenSteppedOn: 0
+  breakDelay: 0
 --- !u!1001 &2003586422
 PrefabInstance:
   m_ObjectHideFlags: 0
