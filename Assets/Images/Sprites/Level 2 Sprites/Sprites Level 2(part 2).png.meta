@@ -146,10 +146,10 @@ TextureImporter:
       name: Sprites Level 3_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 289
-        width: 30
-        height: 30
+        x: 2
+        y: 290
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,10 +168,10 @@ TextureImporter:
       name: Sprites Level 3_1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 289
-        width: 30
-        height: 30
+        x: 34
+        y: 290
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -190,10 +190,10 @@ TextureImporter:
       name: Sprites Level 3_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 297
-        width: 61
-        height: 13
+        x: 65
+        y: 298
+        width: 59
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,10 +212,10 @@ TextureImporter:
       name: Sprites Level 3_3
       rect:
         serializedVersion: 2
-        x: 162
-        y: 291
-        width: 27
-        height: 27
+        x: 163
+        y: 292
+        width: 25
+        height: 25
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: Sprites Level 3_4
       rect:
         serializedVersion: 2
-        x: 1
-        y: 257
-        width: 30
-        height: 30
+        x: 2
+        y: 258
+        width: 28
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,10 +256,10 @@ TextureImporter:
       name: Sprites Level 3_5
       rect:
         serializedVersion: 2
-        x: 32
-        y: 261
-        width: 96
-        height: 23
+        x: 33
+        y: 262
+        width: 94
+        height: 21
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +278,10 @@ TextureImporter:
       name: Sprites Level 3_6
       rect:
         serializedVersion: 2
-        x: 192
-        y: 261
-        width: 64
-        height: 23
+        x: 193
+        y: 262
+        width: 62
+        height: 21
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -393,7 +393,7 @@ TextureImporter:
         width: 3
         height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
