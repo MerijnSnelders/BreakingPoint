@@ -3,7 +3,7 @@
 public class FallingBoulder : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask extraLayers; // Additional layers you can select in the Inspector
     [SerializeField] private float fallSpeed = 8f;
     [SerializeField] private float smashWidth = 1.5f;
     [SerializeField] private float smashDepth = 1.0f;
@@ -13,6 +13,7 @@ public class FallingBoulder : MonoBehaviour
     [SerializeField] private Rigidbody2D[] objectsToFall;
 
     private Rigidbody2D rb;
+    private LayerMask combinedLayerMask;
 
     private void Awake()
     {
@@ -20,14 +21,17 @@ public class FallingBoulder : MonoBehaviour
         rb.gravityScale = 0f;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.freezeRotation = true;
+
+        // Ensure the “Ground” layer is always included
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        combinedLayerMask = extraLayers | (1 << groundLayer);
     }
 
-    // Called by your trigger to make it fall
     public void Drop() => rb.gravityScale = fallSpeed;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        if (IsInCombinedLayer(collision.gameObject.layer))
         {
             MakeAssignedObjectsFall();
             SmashGroundInstantly();
@@ -36,47 +40,43 @@ public class FallingBoulder : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        if (IsInCombinedLayer(collision.gameObject.layer))
         {
             SmashGroundInstantly();
         }
     }
 
+    private bool IsInCombinedLayer(int layer)
+    {
+        return (combinedLayerMask & (1 << layer)) != 0;
+    }
+
     private void SmashGroundInstantly()
     {
-        // Detect boulder size
         float boulderHeight = 1f;
         Collider2D boulderCollider = GetComponent<Collider2D>();
         if (boulderCollider != null)
             boulderHeight = boulderCollider.bounds.size.y;
 
-        // Place destruction box right below the boulder
         float offset = boulderHeight / 2f + smashDepth / 2f;
         Vector2 boxCenter = new Vector2(transform.position.x, transform.position.y - offset);
         Vector2 boxSize = new Vector2(smashWidth, smashDepth);
 
-        // Find ground colliders under it
-        Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, groundLayer);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, combinedLayerMask);
 
         foreach (var hit in hits)
         {
             if (hit == null) continue;
 
-            // 💥 Spawn effect at the destroyed block's position
             if (destroyEffectPrefab != null)
             {
-                Instantiate(
-                    destroyEffectPrefab,
-                    hit.transform.position,
-                    Quaternion.identity
-                );
+                Instantiate(destroyEffectPrefab, hit.transform.position, Quaternion.identity);
                 Destroy(destroyEffectPrefab, 1f);
             }
 
             Destroy(hit.gameObject);
         }
 
-        // Slight nudge downward to ensure continued fall
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, -5f);
 
         Debug.Log($"Destroyed {hits.Length} ground colliders under boulder.");

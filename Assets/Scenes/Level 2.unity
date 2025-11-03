@@ -12887,7 +12887,7 @@ MonoBehaviour:
   popHeight: 0
   popSpeed: 5
   breakWhenSteppedOn: 1
-  breakDelay: 0.1
+  breakDelay: 0.5
 --- !u!61 &947204753 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 4982509212716378690, guid: d5e1006a5aa848840bc334df22669371, type: 3}
@@ -22851,7 +22851,7 @@ MonoBehaviour:
   blockRenderer: {fileID: 1757643010}
   popHeight: 0
   popSpeed: 5
-  breakWhenSteppedOn: 0
+  breakWhenSteppedOn: 1
   breakDelay: 0.5
 --- !u!4 &1765395340 stripped
 Transform:
