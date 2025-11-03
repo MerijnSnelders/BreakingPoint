@@ -1276,11 +1276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 267.63
+      value: -14.2
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.17
+      value: -3.8
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1363,7 +1363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boulder: {fileID: 1511901997}
   playerTag: Player
-  delayBeforeFall: 2.5
+  delayBeforeFall: 1.45
 --- !u!61 &87772479
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1398,7 +1398,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 6.9099903, y: 9.717829}
+  m_Offset: {x: 14.182632, y: 9.717829}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1408,7 +1408,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.4442024, y: 20.435658}
+  m_Size: {x: 4.0881042, y: 20.435658}
   m_EdgeRadius: 0
 --- !u!4 &87772480
 Transform:
@@ -4458,7 +4458,7 @@ MonoBehaviour:
   - {fileID: 1866956397}
   leftLimit: {fileID: 2095274057}
   rightLimit: {fileID: 624734591}
-  moveSpeed: 10
+  moveSpeed: 20
   returnDelay: 0
   autoClose: 0
 --- !u!61 &325810477
@@ -16157,6 +16157,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoneGround (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8044994766544360683, guid: e73f5ceaf478e4f418d96debfd57bed1, type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18900,7 +18904,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 1.1161423, y: -0.082833886}
+  m_Offset: {x: -0.36470413, y: -0.08283377}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -18910,7 +18914,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.4118652, y: 4.4916143}
+  m_Size: {x: 4.373558, y: 4.4916143}
   m_EdgeRadius: 0
 --- !u!1001 &1522133467
 PrefabInstance:
@@ -19531,7 +19535,7 @@ MonoBehaviour:
   - {fileID: 1667531830}
   leftLimit: {fileID: 1261490544}
   rightLimit: {fileID: 562068353}
-  moveSpeed: 10
+  moveSpeed: 20
   returnDelay: 0
   autoClose: 0
 --- !u!61 &1578987570
