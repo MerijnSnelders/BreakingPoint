@@ -25,6 +25,13 @@ public class PlayerDeath : MonoBehaviour
     private static bool checkpointSoundPlayed = false;
     private static string lastSceneName = null;
 
+    // falling back to other level
+    public bool ResetLevelFallTroll = false;
+    public bool isLevel3 = false;
+    private float newFallTreshhold = -99f;
+
+
+
     void Awake()
     {
         string currentScene = SceneManager.GetActiveScene().name;
@@ -58,8 +65,17 @@ public class PlayerDeath : MonoBehaviour
     {
         if (isDying) return;
 
-        if (transform.position.y < fallThreshold)
-            Die();
+        if(isLevel3)
+        {
+            if (transform.position.y < newFallTreshhold)
+                Die();
+        }
+        else
+        {
+            if (transform.position.y < fallThreshold)
+                Die();
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
