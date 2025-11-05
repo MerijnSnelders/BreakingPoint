@@ -1,23 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DeathCounter : MonoBehaviour
 {
     public static DeathCounter Instance;
 
-    [Header("UI (Optional)")]
-    public Text deathText; // Assign your UI Text element here in the Inspector
+    [Header("UI Elements")]
+    public Image deathIcon;          // het hoofd-afbeelding
+    public TMP_Text deathCountText;  // de "x 3" tekst
 
     private int deathCount = 0;
 
     private void Awake()
     {
-        // Ensure this object stays across scenes
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            deathCount = PlayerPrefs.GetInt("DeathCount", 0);
+            DontDestroyOnLoad(Instance);
             UpdateUI();
         }
         else
@@ -44,9 +44,9 @@ public class DeathCounter : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (deathText != null)
+        if (deathCountText != null)
         {
-            deathText.text = "Deaths: " + deathCount;
+            deathCountText.text = "x " + deathCount;
         }
     }
 }

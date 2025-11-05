@@ -98,7 +98,7 @@ public class PlayerDeath : MonoBehaviour
     {
         if (isDying) return;
         isDying = true;
-
+        DeathCounter.Instance?.AddDeath();
         if (movementScript != null)
             movementScript.CanMove = false;
 
