@@ -141,11 +141,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 160.3
+      value: 309.5
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5
+      value: -2.6
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -250,7 +250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414893138631805350, guid: 723357b91c4e2024794166caa2f972eb, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -593,6 +593,10 @@ PrefabInstance:
     - target: {fileID: 3221322482259794556, guid: f0fdbc52299978546aa8c79461b5c37a, type: 3}
       propertyPath: m_Name
       value: level 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5155949320011878416, guid: f0fdbc52299978546aa8c79461b5c37a, type: 3}
+      propertyPath: nextSceneName
+      value: TheEnd
       objectReference: {fileID: 0}
     - target: {fileID: 5697329133371321292, guid: f0fdbc52299978546aa8c79461b5c37a, type: 3}
       propertyPath: delayBeforeFall
