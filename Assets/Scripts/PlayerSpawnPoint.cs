@@ -5,14 +5,39 @@ public class PlayerSpawnPoint : MonoBehaviour
     private void Start()
     {
         GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
+        if (player == null)
         {
-            player.transform.position = transform.position;
+            Debug.LogWarning("⚠️ Player not found in scene!");
+            return;
+        }
+
+        // 🟩 Get PlayerDeath component
+        PlayerDeath deathScript = player.GetComponent<PlayerDeath>();
+
+        // 🟩 If player died once and checkpoint exists, use it
+        if (deathScript != null && HasCheckpoint())
+        {
+            player.transform.position = GetCheckpointPosition();
         }
         else
         {
-            Debug.LogWarning("⚠️ Player not found in scene!");
+            player.transform.position = transform.position;
         }
+    }
+
+    // ✅ Helpers to access PlayerDeath static data
+    private bool HasCheckpoint()
+    {
+        var field = typeof(PlayerDeath).GetField("hasCheckpoint",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        return field != null && (bool)field.GetValue(null);
+    }
+
+    private Vector2 GetCheckpointPosition()
+    {
+        var field = typeof(PlayerDeath).GetField("respawnPoint",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        return field != null ? (Vector2)field.GetValue(null) : Vector2.zero;
     }
 
     private void OnDrawGizmos()
