@@ -25,6 +25,8 @@ public class EndLevelScript : MonoBehaviour
 
     private void LoadNextScene()
     {
+        ResetCheckpointData();
+
         if (!string.IsNullOrEmpty(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
@@ -33,6 +35,14 @@ public class EndLevelScript : MonoBehaviour
         {
             Debug.LogWarning("⚠️ No scene name set on " + gameObject.name);
         }
+    }
+
+    private void ResetCheckpointData()
+    {
+        // Access static fields in PlayerDeath and reset them
+        var type = typeof(PlayerDeath);
+        type.GetField("hasCheckpoint", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.SetValue(null, false);
+        type.GetField("diedOnce", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.SetValue(null, false);
     }
 }
 
