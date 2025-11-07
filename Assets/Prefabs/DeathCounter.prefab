@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63b45e33a5e75e4d9ac979836beacab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathIcon: {fileID: 3907635151189646599}
+  deathIcon: {fileID: 4348623831849149098, guid: be82ec27443352b4a8c40b8c4ddfc9f3, type: 3}
   deathCountText: {fileID: 5483876951714077040}
 --- !u!1 &5419463539383147451
 GameObject:
