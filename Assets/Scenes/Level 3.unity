@@ -9868,6 +9868,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1369180005964705716, guid: 599ddc67d1c050642b6d527204c6fd26, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 161.99995
+      objectReference: {fileID: 0}
     - target: {fileID: 1475992312147302896, guid: 599ddc67d1c050642b6d527204c6fd26, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.89293
@@ -9923,6 +9927,10 @@ PrefabInstance:
     - target: {fileID: 4307817934269953426, guid: 599ddc67d1c050642b6d527204c6fd26, type: 3}
       propertyPath: m_SizeDelta.y
       value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307817934269953426, guid: 599ddc67d1c050642b6d527204c6fd26, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 173
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14446,11 +14454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 266.6
+      value: 236.9
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.8
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20748,7 +20756,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   fallSpeed: 8
   smashWidth: 50
-  smashDepth: 10
+  smashDepth: 20
   destroyEffectPrefab: {fileID: 4752277869543424900, guid: 3b88b466d2ff5b14695157a01fa06a68, type: 3}
   objectsToFall: []
 --- !u!4 &2091607884 stripped

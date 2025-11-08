@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TheEnd.unity
     guid: 1961fdea4becb4341b00f98afc7c2bb1
+  - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: 757b8071ac2b9ff4293bee304b065cad
+  - enabled: 1
+    path: Assets/Scenes/LevelSelection.unity
+    guid: 15f931dfbda9b8d41874672272377071
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

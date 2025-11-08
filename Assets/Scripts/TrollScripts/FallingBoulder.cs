@@ -64,23 +64,54 @@ public class FallingBoulder : MonoBehaviour
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, combinedLayerMask);
 
+        bool playerNearby = false;
+
         foreach (var hit in hits)
         {
             if (hit == null) continue;
 
+            // ✅ Detect if player is nearby
+            if (hit.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                playerNearby = true;
+                continue; // Don’t destroy player here, just mark it
+            }
+
+            // ❌ Skip destroying the boulder itself
+            if (hit.gameObject == gameObject)
+                continue;
+
+            // ✅ Destroy other ground objects
             if (destroyEffectPrefab != null)
             {
-                Instantiate(destroyEffectPrefab, hit.transform.position, Quaternion.identity);
-                Destroy(destroyEffectPrefab, 1f);
+                GameObject fx = Instantiate(destroyEffectPrefab, hit.transform.position, Quaternion.identity);
+                Destroy(fx, 1f);
             }
 
             Destroy(hit.gameObject);
         }
 
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, -5f);
+        // 💀 If player was on or right above destroyed ground, kill him
+        if (playerNearby)
+        {
+            PlayerDeath player = FindObjectOfType<PlayerDeath>();
+            if (player != null)
+            {
+                Debug.Log("💀 Player killed by collapsing ground.");
+                player.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+            }
+        }
 
-        Debug.Log($"Destroyed {hits.Length} ground colliders under boulder.");
+        // Stop boulder motion after smash
+        rb.gravityScale = 0f;
+        rb.linearVelocity = Vector2.zero;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        Debug.Log($"💥 Boulder destroyed {hits.Length} ground colliders and checked for player.");
     }
+
+
+
 
     private void MakeAssignedObjectsFall()
     {
