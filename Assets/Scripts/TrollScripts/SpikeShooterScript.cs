@@ -7,8 +7,9 @@ public class SpikeShooterScript : MonoBehaviour
     public Transform shootPoint;        // Where spikes are spawned from
     public float spikeSpeed = 10f;      // How fast the spikes move
     public float fireRate = 1f;         // Time (seconds) between shots
-
+    public float destroySpikeTimer = 5f;
     private float fireTimer = 0f;
+    
 
     void Update()
     {
@@ -42,6 +43,6 @@ public class SpikeShooterScript : MonoBehaviour
         }
 
         // Optionally destroy after a few seconds to avoid clutter
-        Destroy(newSpike, 5f);
+        Destroy(newSpike, destroySpikeTimer);
     }
 }

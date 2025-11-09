@@ -4,8 +4,10 @@ public class DestroySpikeScript : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Obstacle"))
+        Debug.Log(collision.collider.tag);
+        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Obstacle") || collision.collider.CompareTag("Spike"))
         {
+            
             Destroy(gameObject);
         }
     }

@@ -14454,11 +14454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 236.9
+      value: 262.2
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14884,8 +14884,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spikePrefab: {fileID: 8728083134199937940, guid: e784fac4a7128084f8db432a3edf16bb, type: 3}
   shootPoint: {fileID: 1037520554}
-  spikeSpeed: 30
-  fireRate: 4
+  spikeSpeed: 20
+  fireRate: 2.5
+  destroySpikeTimer: 3
 --- !u!1001 &1510916625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19518,8 +19519,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spikePrefab: {fileID: 8728083134199937940, guid: e784fac4a7128084f8db432a3edf16bb, type: 3}
   shootPoint: {fileID: 1556778516}
-  spikeSpeed: 15
-  fireRate: 1.5
+  spikeSpeed: 10
+  fireRate: 2
+  destroySpikeTimer: 4
 --- !u!4 &1986619326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3663052855945306665, guid: 043dcc2cf4862764d881d4f5509c3a7b, type: 3}
