@@ -3,41 +3,33 @@ using UnityEngine;
 public class PlatformSpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
+    [Tooltip("The platform prefab to be spawned. Drag your platform prefab here.")]
     public GameObject platformPrefab;
-    public int platformCount = 8;
-    public float startY = 6f;
-    public float verticalSpacing = 1.5f;
-    public float startX = 2f;
-    public float bottemY = -10f;
 
-    [Header("Platform Speed Settings")]
-    public float baseSpeed = 1.5f;
-    public float speedRandomness = 0.3f;
+    [Tooltip("The time in seconds between each platform spawn.")]
+    public float spawnRate = 3.0f;
+
+    [Tooltip("The exact position where new platforms will be spawned.")]
+    public Vector3 spawnPosition;
 
     void Start()
     {
-        if (!platformPrefab)
+        if (platformPrefab == null)
         {
-            Debug.LogError("PlatformSpawner: no platformPrefab assigned!");
+            Debug.LogError("Platform Prefab is not set on the Spawner!", this);
             return;
         }
 
-        for (int i = 0; i < platformCount; i++)
-        {
-            //float randomSpeed = baseSpeed + Random.Range(-speedRandomness, speedRandomness);
+        // Call the SpawnPlatform function every 'spawnRate' seconds, starting after 0 seconds.
+        InvokeRepeating("SpawnPlatform", 0f, spawnRate);
+    }
 
-            // Keep spacing consistent
-            Vector3 spawnPos = new Vector3(startX, startY - (i * verticalSpacing), 0f);
-            GameObject p = Instantiate(platformPrefab, spawnPos, Quaternion.identity);
-
-            PlatformController pc = p.GetComponent<PlatformController>();
-            if (pc != null)
-            {
-                pc.speed = baseSpeed;
-                pc.topY = startY;
-                pc.bottomY = bottemY;
-                pc.verticalSpacing = verticalSpacing;
-            }
-        }
+    /// <summary>
+    /// Instantiates a new platform at the spawn position.
+    /// </summary>
+    void SpawnPlatform()
+    {
+        // Create a new instance of the platform prefab at the specified position
+        Instantiate(platformPrefab, spawnPosition, Quaternion.identity);
     }
 }
