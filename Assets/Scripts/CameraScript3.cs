@@ -19,6 +19,9 @@ public class CameraScript3 : MonoBehaviour
     private float dynamicY;
     private float currentBaseY;
 
+    public GameObject upperBackground;
+    public GameObject lowerBackground;
+
     void Start()
     {
         if (player == null)
@@ -37,6 +40,8 @@ public class CameraScript3 : MonoBehaviour
         currentBaseY = fixedY;
         dynamicY = currentBaseY;
         transform.position = new Vector3(leftClampX, currentBaseY, transform.position.z);
+        upperBackground.SetActive(true);
+        lowerBackground.SetActive(false);
     }
 
     void LateUpdate()
@@ -45,9 +50,18 @@ public class CameraScript3 : MonoBehaviour
 
         // --- 🔄 Switch camera zone automatically ---
         if (player.position.y < lowerZoneThreshold)
+        {
+            lowerBackground.SetActive(true);
+            //upperBackground.SetActive(false);
             currentBaseY = lowerFixedY;
+        }
         else
+        {
+            if(!upperBackground.active)
+                upperBackground.SetActive(true);
             currentBaseY = fixedY;
+        }
+            
 
         // --- 🧠 Smooth vertical follow logic ---
         if (player.position.y > currentBaseY + yThreshold)
