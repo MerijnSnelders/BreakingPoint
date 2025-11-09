@@ -103,9 +103,9 @@ public class FallingBoulder : MonoBehaviour
         }
 
         // Stop boulder motion after smash
-        rb.gravityScale = 0f;
-        rb.linearVelocity = Vector2.zero;
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        rb.gravityScale = fallSpeed;
+        rb.constraints = RigidbodyConstraints2D.None; // allow continued fall
+        rb.freezeRotation = true; // still prevent tilting
 
         Debug.Log($"💥 Boulder destroyed {hits.Length} ground colliders and checked for player.");
     }
