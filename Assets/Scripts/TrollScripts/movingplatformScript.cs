@@ -21,11 +21,17 @@ public class movingplatformScript : MonoBehaviour
 
     private bool trolling = false;
     private Transform platform;
+    private SpriteRenderer sprite;
     private Coroutine moveRoutine;
+    public bool isPlatform1 = false;
 
     void Start()
     {
         platform = transform;
+        sprite = GetComponent<SpriteRenderer>();
+        if(isPlatform1)
+            sprite.enabled = false;
+        
     }
 
     // --- Trigger wordt geactiveerd door een apart object ---
@@ -33,6 +39,7 @@ public class movingplatformScript : MonoBehaviour
     {
         if (!isActivated)
         {
+            sprite.enabled = true;
             isActivated = true;
             if(isPlatform1)
                 moveRoutine = StartCoroutine(MovePlatform1());
@@ -129,6 +136,7 @@ public class movingplatformScript : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
+            
             collision.collider.transform.SetParent(transform);
         }
     }
