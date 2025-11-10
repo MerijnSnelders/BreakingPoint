@@ -1,20 +1,42 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class StartMenuScript : MonoBehaviour
 {
-    // This loads your game scene
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource; // 🔊 shared audio source
+    [SerializeField] private AudioClip playSound;     // ▶️ sound for Play button
+    [SerializeField] private AudioClip exitSound;     // ❌ sound for Exit button
+    [SerializeField] private float soundDelay = 0.3f; // optional delay before action
+
+    // 🎮 Play Game
     public void PlayGame()
     {
-        // Replace "Level1" with your actual first scene name
+        if (audioSource && playSound)
+            audioSource.PlayOneShot(playSound);
+
+        // Optional: delay scene load slightly to let the sound play first
+        Invoke(nameof(LoadGameScene), soundDelay);
+    }
+
+    private void LoadGameScene()
+    {
         SceneManager.LoadScene("LevelSelection");
     }
 
-    // This quits the application
+    // 🚪 Exit Game
     public void ExitGame()
     {
-        Debug.Log("Quit Game"); // works in Editor
-        Application.Quit();     // only works in build
+        if (audioSource && exitSound)
+            audioSource.PlayOneShot(exitSound);
+
+        // optional small delay for sound to finish
+        Invoke(nameof(QuitGame), soundDelay);
+    }
+
+    private void QuitGame()
+    {
+        Debug.Log("Quit Game"); // Works in editor
+        Application.Quit();     // Works in build
     }
 }

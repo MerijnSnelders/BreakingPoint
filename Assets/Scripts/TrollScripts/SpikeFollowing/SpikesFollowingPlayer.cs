@@ -14,6 +14,12 @@ public class SpikesFollowingPlayer : MonoBehaviour
     public Transform leftBorder;
     public Transform rightBorder;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource; // optional audio source
+    [SerializeField] private AudioClip riseClip;      // optional rise sound
+    [SerializeField, Tooltip("Slightly randomize pitch each time for variation")]
+    private bool randomizePitch = true;
+
     private Rigidbody2D rb;
 
     // State
@@ -32,7 +38,7 @@ public class SpikesFollowingPlayer : MonoBehaviour
         rb.freezeRotation = true;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
 
-        // auto-find player if not assigned
+        // Auto-find player if not assigned
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
@@ -87,6 +93,14 @@ public class SpikesFollowingPlayer : MonoBehaviour
     {
         if (isRising || hasRisen) return;
 
+        // 🎵 Play rise sound
+        if (audioSource != null && riseClip != null)
+        {
+            if (randomizePitch)
+                audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(riseClip);
+        }
+
         isRising = true;
         riseTargetPos = new Vector2(transform.position.x, transform.position.y + riseDistance);
         Debug.Log($"[{name}] Rising!");
@@ -95,7 +109,7 @@ public class SpikesFollowingPlayer : MonoBehaviour
     // Called by chase trigger when player jumps above
     public void StartChasing()
     {
-        playerInChaseZone = true; // remember that the player is above
+        playerInChaseZone = true;
 
         if (hasRisen)
         {

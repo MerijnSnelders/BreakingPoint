@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class TweakingSpikeScript : MonoBehaviour
@@ -12,6 +12,12 @@ public class TweakingSpikeScript : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;               // How fast they move
     [SerializeField] private float stayUpTime = 0.5f;            // Time spikes stay up before going down
     [SerializeField] private bool oneTime = true;                // Should it trigger only once?
+
+    [Header("Audio (Optional)")]
+    [SerializeField] private AudioSource audioSource;            // Optional AudioSource
+    [SerializeField] private AudioClip riseClip;                 // Sound when spikes rise
+    [SerializeField, Tooltip("Adds slight pitch variation for each play")]
+    private bool randomizePitch = true;
 
     private bool isActivated = false;
 
@@ -39,6 +45,14 @@ public class TweakingSpikeScript : MonoBehaviour
     {
         Vector3 startPos = spikeTransform.position;
         Vector3 targetPos = startPos + (Vector3)(moveDirection.normalized * moveDistance);
+
+        // 🎵 Play rise sound once (when spikes start moving)
+        if (audioSource != null && riseClip != null)
+        {
+            if (randomizePitch)
+                audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(riseClip);
+        }
 
         // Move up
         while (Vector3.Distance(spikeTransform.position, targetPos) > 0.01f)
