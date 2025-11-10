@@ -632,7 +632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5155949320011878416, guid: f0fdbc52299978546aa8c79461b5c37a, type: 3}
       propertyPath: nextSceneName
-      value: TheEnd
+      value: Level 3
       objectReference: {fileID: 0}
     - target: {fileID: 5697329133371321292, guid: f0fdbc52299978546aa8c79461b5c37a, type: 3}
       propertyPath: delayBeforeFall
