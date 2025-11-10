@@ -4,30 +4,29 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelectMenu : MonoBehaviour
 {
-    [Header("Assign Buttons")]
-    public Button level1Button;
-    public Button level2Button;
-    public Button level3Button;
-    public Button backButton;
+    [System.Serializable]
+    public class LevelButton
+    {
+        public Button button;
+        public string sceneName;
+    }
 
-    [Header("Scene Names")]
-    public string level1Scene = "Level1";
-    public string level2Scene = "Level2";
-    public string level3Scene = "Level3";
-    public string mainMenuScene = "MainMenu";
+    [Header("Level Buttons (assign in Inspector)")]
+    public LevelButton[] levelButtons;
 
     private void Start()
     {
-        SetupButton(level1Button, level1Scene);
-        SetupButton(level2Button, level2Scene);
-        SetupButton(level3Button, level3Scene);
-        SetupButton(backButton, mainMenuScene);
-
+        foreach (var levelButton in levelButtons)
+        {
+            if (levelButton.button != null && !string.IsNullOrEmpty(levelButton.sceneName))
+            {
+                levelButton.button.onClick.AddListener(() => LoadScene(levelButton.sceneName));
+            }
+        }
     }
 
-    private void SetupButton(Button button, string sceneName)
+    private void LoadScene(string sceneName)
     {
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => SceneManager.LoadScene(sceneName));
+        SceneManager.LoadScene(sceneName);
     }
 }
