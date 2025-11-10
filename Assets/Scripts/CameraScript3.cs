@@ -52,7 +52,7 @@ public class CameraScript3 : MonoBehaviour
         if (player.position.y < lowerZoneThreshold)
         {
             lowerBackground.SetActive(true);
-            //upperBackground.SetActive(false);
+            upperBackground.SetActive(false);
             currentBaseY = lowerFixedY;
         }
         else
