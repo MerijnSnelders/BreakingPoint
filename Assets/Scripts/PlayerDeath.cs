@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerDeath : MonoBehaviour
 {
@@ -30,13 +31,10 @@ public class PlayerDeath : MonoBehaviour
     public bool isLevel3 = false;
     private float newFallTreshhold = -99f;
 
-
-
     void Awake()
     {
         string currentScene = SceneManager.GetActiveScene().name;
 
-        // ✅ Only reset checkpoint sound if a *different* level is loaded
         if (lastSceneName != currentScene)
         {
             checkpointSoundPlayed = false;
@@ -50,7 +48,6 @@ public class PlayerDeath : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         movementScript = GetComponent<PlayerMovementScript>();
 
-        // ✅ Move to checkpoint if we’ve died once and have one saved
         if (diedOnce && hasCheckpoint)
         {
             transform.position = respawnPoint;
@@ -65,7 +62,7 @@ public class PlayerDeath : MonoBehaviour
     {
         if (isDying) return;
 
-        if(isLevel3)
+        if (isLevel3)
         {
             if (transform.position.y < newFallTreshhold)
                 Die();
@@ -75,7 +72,6 @@ public class PlayerDeath : MonoBehaviour
             if (transform.position.y < fallThreshold)
                 Die();
         }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -98,7 +94,9 @@ public class PlayerDeath : MonoBehaviour
     {
         if (isDying) return;
         isDying = true;
+
         DeathCounter.Instance?.AddDeath();
+
         if (movementScript != null)
             movementScript.CanMove = false;
 
@@ -113,7 +111,21 @@ public class PlayerDeath : MonoBehaviour
         animator.SetTrigger("Die" + randomDeath);
 
         float animLength = GetAnimationClipLength("Death" + randomDeath) + 0.75f;
-        Invoke(nameof(ReloadScene), animLength);
+
+        // 🎵 Fade out background music while the death animation plays
+        StartCoroutine(FadeOutMusicDuringDeath(animLength));
+    }
+
+    private IEnumerator FadeOutMusicDuringDeath(float delay)
+    {
+        LevelMusic music = FindObjectOfType<LevelMusic>();
+        if (music != null)
+        {
+            yield return music.FadeOut();  // waits for the fade-out coroutine
+        }
+
+        yield return new WaitForSeconds(delay);
+        ReloadScene();
     }
 
     private float GetAnimationClipLength(string clipName)
@@ -129,7 +141,6 @@ public class PlayerDeath : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // ✅ Checkpoint setter
     public void SetCheckpoint(Vector2 newCheckpoint)
     {
         respawnPoint = newCheckpoint;
@@ -137,7 +148,6 @@ public class PlayerDeath : MonoBehaviour
         Debug.Log("Checkpoint set to: " + newCheckpoint);
     }
 
-    // ✅ Checkpoint sound management
     public static bool HasCheckpointSoundPlayed() => checkpointSoundPlayed;
     public static void MarkCheckpointSoundPlayed() => checkpointSoundPlayed = true;
 }

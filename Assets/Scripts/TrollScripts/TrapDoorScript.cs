@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class TrapDoorScript : MonoBehaviour
@@ -13,6 +13,14 @@ public class TrapDoorScript : MonoBehaviour
     public float moveSpeed = 3f;
     public float returnDelay = 2f;
     public bool autoClose = false;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip openSound;
+    [SerializeField, Tooltip("Playback pitch multiplier (1 = normal, >1 = faster)")]
+    private float openSoundPitch = 1.3f; // slightly faster
+    [SerializeField, Tooltip("How long to let the sound play before stopping it (seconds)")]
+    private float openSoundDuration = 1.0f; // shorten the clip
 
     private bool isActivated = false;
     private Vector3[] leftStartPositions;
@@ -35,6 +43,11 @@ public class TrapDoorScript : MonoBehaviour
         if (!isActivated && other.CompareTag("Player"))
         {
             isActivated = true;
+
+            // 🎵 Play faster, shorter open sound
+            if (audioSource != null && openSound != null)
+                StartCoroutine(PlayShortenedSound(openSound, openSoundPitch, openSoundDuration));
+
             StartCoroutine(OpenTrap());
         }
     }
@@ -48,7 +61,6 @@ public class TrapDoorScript : MonoBehaviour
             leftDone = true;
             rightDone = true;
 
-            // move all left blocks to the left
             foreach (Transform block in leftBlocks)
             {
                 if (block.position.x > leftLimit.position.x)
@@ -58,7 +70,6 @@ public class TrapDoorScript : MonoBehaviour
                 }
             }
 
-            // move all right blocks to the right
             foreach (Transform block in rightBlocks)
             {
                 if (block.position.x < rightLimit.position.x)
@@ -87,7 +98,6 @@ public class TrapDoorScript : MonoBehaviour
             leftDone = true;
             rightDone = true;
 
-            // move left blocks back to start
             for (int i = 0; i < leftBlocks.Length; i++)
             {
                 if (leftBlocks[i].position.x < leftStartPositions[i].x)
@@ -97,7 +107,6 @@ public class TrapDoorScript : MonoBehaviour
                 }
             }
 
-            // move right blocks back to start
             for (int i = 0; i < rightBlocks.Length; i++)
             {
                 if (rightBlocks[i].position.x > rightStartPositions[i].x)
@@ -111,5 +120,16 @@ public class TrapDoorScript : MonoBehaviour
         }
 
         isActivated = false;
+    }
+
+    // 🎧 Helper coroutine to play faster & shorter sound
+    private IEnumerator PlayShortenedSound(AudioClip clip, float pitch, float duration)
+    {
+        audioSource.pitch = pitch;
+        audioSource.clip = clip;
+        audioSource.Play();
+        yield return new WaitForSeconds(duration);
+        audioSource.Stop();
+        audioSource.pitch = 1f; // reset pitch
     }
 }

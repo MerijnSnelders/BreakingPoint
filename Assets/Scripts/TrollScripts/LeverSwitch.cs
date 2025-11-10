@@ -6,7 +6,8 @@ public class LeverSwitch : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator leverAnimator;
     [SerializeField] private Transform groundToMove;
-    [SerializeField] private AudioSource audioSource;   // 🎧 Add this
+    [SerializeField] private AudioSource leverAudioSource; // 🎵 lever flip sound
+    [SerializeField] private AudioSource moveAudioSource;  // 🎵 block movement sound
     [SerializeField] private string playerTag = "Player";
 
     [Header("Settings")]
@@ -14,6 +15,12 @@ public class LeverSwitch : MonoBehaviour
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private bool canToggleBack = false;
     [SerializeField] private bool oneUseOnly = true;
+
+    [Header("Audio Settings")]
+    [SerializeField, Tooltip("Playback pitch multiplier (1 = normal, >1 = faster)")]
+    private float moveSoundPitch = 1.2f;
+    [SerializeField, Tooltip("Stop sound after this many seconds (0 = play full clip)")]
+    private float moveSoundDuration = 0.9f;
 
     private bool isActivated = false;
     private bool isMoving = false;
@@ -26,6 +33,16 @@ public class LeverSwitch : MonoBehaviour
         {
             originalPosition = groundToMove.position;
             targetPosition = originalPosition + moveOffset;
+        }
+
+        // make sure sounds don't play automatically
+        if (leverAudioSource != null)
+            leverAudioSource.playOnAwake = false;
+
+        if (moveAudioSource != null)
+        {
+            moveAudioSource.loop = false;
+            moveAudioSource.playOnAwake = false;
         }
     }
 
@@ -42,16 +59,15 @@ public class LeverSwitch : MonoBehaviour
     private void ActivateLever()
     {
         if (isActivated && !canToggleBack) return;
-
         isActivated = true;
 
         // 🎬 Play lever animation
         if (leverAnimator != null)
             leverAnimator.SetTrigger("Flip");
 
-        // 🎧 Play sound
-        if (audioSource != null)
-            audioSource.Play();
+        // 🎧 Play lever sound
+        if (leverAudioSource != null)
+            leverAudioSource.Play();
 
         // 🧱 Move ground
         if (!isMoving && groundToMove != null)
@@ -61,14 +77,13 @@ public class LeverSwitch : MonoBehaviour
     private void DeactivateLever()
     {
         if (!canToggleBack) return;
-
         isActivated = false;
 
         if (leverAnimator != null)
             leverAnimator.SetTrigger("FlipBack");
 
-        if (audioSource != null)
-            audioSource.Play(); // plays same sound when toggling back
+        if (leverAudioSource != null)
+            leverAudioSource.Play();
 
         if (!isMoving && groundToMove != null)
             StartCoroutine(MoveGround(groundToMove.position, originalPosition));
@@ -77,6 +92,11 @@ public class LeverSwitch : MonoBehaviour
     private IEnumerator MoveGround(Vector3 start, Vector3 end)
     {
         isMoving = true;
+
+        // 🎵 Play shortened, faster movement sound
+        if (moveAudioSource != null)
+            StartCoroutine(PlayShortenedSound(moveAudioSource, moveSoundPitch, moveSoundDuration));
+
         float t = 0f;
         while (t < 1f)
         {
@@ -84,6 +104,20 @@ public class LeverSwitch : MonoBehaviour
             groundToMove.position = Vector3.Lerp(start, end, Mathf.SmoothStep(0f, 1f, t));
             yield return null;
         }
+
         isMoving = false;
+    }
+
+    // 🎧 Helper coroutine for faster & shortened playback
+    private IEnumerator PlayShortenedSound(AudioSource source, float pitch, float duration)
+    {
+        source.pitch = pitch;
+        source.Play();
+        if (duration > 0f)
+        {
+            yield return new WaitForSeconds(duration);
+            source.Stop();
+        }
+        source.pitch = 1f; // reset pitch
     }
 }
