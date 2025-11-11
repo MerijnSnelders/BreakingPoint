@@ -17,7 +17,7 @@ public class LevelSelectMenu : MonoBehaviour
 
     [Header("Back Button (assign in Inspector)")]
     [SerializeField] private Button backButton;
-    [SerializeField] private string mainMenuScene = "MainMenu";
+    [SerializeField] private string mainMenuScene = "StartMenu";
 
     [Header("Audio Settings")]
     [SerializeField] private AudioSource audioSource;

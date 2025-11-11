@@ -4891,7 +4891,7 @@ MonoBehaviour:
   oneTime: 1
   audioSource: {fileID: 0}
   spikePopClip: {fileID: 0}
-  randomizePitch: 1
+  randomizePitch: 0
 --- !u!1001 &812594749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6278,11 +6278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.9
+      value: 95.5
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.9
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 759323953558361784, guid: deac10f6520066a47ac11ca4fbe304a3, type: 3}
       propertyPath: m_LocalPosition.z
