@@ -1,19 +1,33 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelMusic : MonoBehaviour
 {
     private static LevelMusic instance;
     private AudioSource audioSource;
-    private string currentSceneName;
 
-    [Header("Fade Settings")]
-    [SerializeField] private float fadeInDuration = 1.5f;
-    [SerializeField] private float fadeOutDuration = 2.5f;
+    [Header("Music Per Scene")]
+    [SerializeField] private SceneMusic[] sceneMusicList;
+
+    [Header("Settings")]
+    [SerializeField] private float fadeDuration = 1.5f;
     [SerializeField] private float baseVolume = 0.5f;
 
-    private bool isFadingOut = false;
+    private Dictionary<string, AudioClip> musicLookup;
+    private string currentScene;
+
+    // NEW — resume system
+    private float savedTime = 0f;
+    private bool resumeAfterReload = false;
+
+    [System.Serializable]
+    public class SceneMusic
+    {
+        public string sceneName;
+        public AudioClip musicClip;
+    }
 
     private void Awake()
     {
@@ -23,10 +37,13 @@ public class LevelMusic : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             audioSource = GetComponent<AudioSource>();
-            currentSceneName = SceneManager.GetActiveScene().name;
+            audioSource.loop = true;
+            audioSource.volume = 0f;
 
-            audioSource.volume = baseVolume;
-            audioSource.Play();
+            BuildLookupTable();
+
+            currentScene = SceneManager.GetActiveScene().name;
+            PlayMusicForScene(currentScene);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
@@ -36,49 +53,141 @@ public class LevelMusic : MonoBehaviour
         }
     }
 
+    private void BuildLookupTable()
+    {
+        musicLookup = new Dictionary<string, AudioClip>();
+        foreach (var entry in sceneMusicList)
+        {
+            if (!musicLookup.ContainsKey(entry.sceneName))
+                musicLookup.Add(entry.sceneName, entry.musicClip);
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // If same scene was reloaded → fade in again
-        if (scene.name == currentSceneName)
+        // same scene reloaded → fade in from saved timestamp
+        if (scene.name == currentScene)
         {
-            StartCoroutine(FadeIn());
+            StopAllCoroutines();
+
+            if (resumeAfterReload)
+            {
+                StartCoroutine(FadeInResume());
+                resumeAfterReload = false;
+            }
+            else
+            {
+                StartCoroutine(FadeInNewTrack());
+            }
+
+            return;
+        }
+
+        // new scene → change music
+        currentScene = scene.name;
+        PlayMusicForScene(scene.name);
+    }
+
+    private void PlayMusicForScene(string sceneName)
+    {
+        if (musicLookup.ContainsKey(sceneName))
+        {
+            StopAllCoroutines();
+            StartCoroutine(SwapTrack(musicLookup[sceneName]));
         }
         else
         {
-            // Different scene → destroy the music object
-            audioSource.Stop();
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            Destroy(gameObject);
+            StopAllCoroutines();
+            StartCoroutine(FadeOutOnly());
         }
     }
 
-    public IEnumerator FadeIn()
+    // Fade-out for switching tracks
+    private IEnumerator SwapTrack(AudioClip newClip)
     {
-        float elapsed = 0f;
-        while (elapsed < fadeInDuration)
+        float t = 0;
+        float startVol = audioSource.volume;
+
+        while (t < fadeDuration)
         {
-            elapsed += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(0f, baseVolume, elapsed / fadeInDuration);
+            t += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVol, 0f, t / fadeDuration);
             yield return null;
         }
+
+        audioSource.clip = newClip;
+        audioSource.time = 0f;
+        audioSource.Play();
+
+        t = 0f;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, baseVolume, t / fadeDuration);
+            yield return null;
+        }
+
         audioSource.volume = baseVolume;
     }
 
-    public IEnumerator FadeOut()
+    // Only fades out (used when scene has no assigned music)
+    private IEnumerator FadeOutOnly()
     {
-        if (isFadingOut) yield break;
-        isFadingOut = true;
+        float t = 0;
+        float startVol = audioSource.volume;
 
-        float startVolume = audioSource.volume;
-        float elapsed = 0f;
-        while (elapsed < fadeOutDuration)
+        while (t < fadeDuration)
         {
-            elapsed += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / fadeOutDuration);
+            t += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVol, 0f, t / fadeDuration);
             yield return null;
         }
 
+        audioSource.Stop();
+    }
+
+    // NEW — fade in, continue from saved timestamp
+    private IEnumerator FadeInResume()
+    {
+        audioSource.time = savedTime;
+        audioSource.Play();
+
+        float t = 0f;
         audioSource.volume = 0f;
-        isFadingOut = false;
+
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, baseVolume, t / fadeDuration);
+            yield return null;
+        }
+
+        audioSource.volume = baseVolume;
+    }
+
+    // NEW — fade in from the start of clip (reload with no resume)
+    private IEnumerator FadeInNewTrack()
+    {
+        float t = 0f;
+        audioSource.volume = 0f;
+
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, baseVolume, t / fadeDuration);
+            yield return null;
+        }
+
+        audioSource.volume = baseVolume;
+    }
+
+    // NEW — called by PlayerDeath
+    public void FadeOutAndStoreTime()
+    {
+        savedTime = audioSource.time; // save playback position
+        resumeAfterReload = true;
+
+        StopAllCoroutines();
+        StartCoroutine(FadeOutOnly());
     }
 }

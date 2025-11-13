@@ -119,14 +119,19 @@ public class PlayerDeath : MonoBehaviour
     private IEnumerator FadeOutMusicDuringDeath(float delay)
     {
         LevelMusic music = FindObjectOfType<LevelMusic>();
+
         if (music != null)
         {
-            yield return music.FadeOut();  // waits for the fade-out coroutine
+            music.FadeOutAndStoreTime();     // fade out + save timestamp
+            yield return new WaitForSeconds(1f);
         }
 
         yield return new WaitForSeconds(delay);
         ReloadScene();
     }
+
+
+
 
     private float GetAnimationClipLength(string clipName)
     {
